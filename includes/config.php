@@ -12,20 +12,10 @@ try {
     die("Database connection failed: " . $e->getMessage());
 }
 
-// Site base URL — auto-detected so it works on Replit's proxy
+// Use root-relative base URL so assets and redirects work correctly behind
+// Replit's HTTPS proxy (PHP sees plain HTTP internally, so building an
+// absolute http:// URL causes mixed-content blocks in the browser).
 if (!defined('BASE_URL')) {
-    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-    $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    // Detect the script's depth from the project root to build the base path
-    $docRoot = realpath($_SERVER['DOCUMENT_ROOT']);
-    $scriptDir = dirname(realpath($_SERVER['SCRIPT_FILENAME']));
-    $basePath = '/';
-    if ($docRoot && $scriptDir && strpos($scriptDir, $docRoot) === 0) {
-        $rel = str_replace($docRoot, '', $scriptDir);
-        // Walk back to project root (config.php is always in includes/, one level down)
-        $depth = substr_count(trim($rel, '/'), '/');
-        $basePath = '/';
-    }
-    define('BASE_URL', $scheme . '://' . $host . $basePath);
+    define('BASE_URL', '/');
 }
 ?>
