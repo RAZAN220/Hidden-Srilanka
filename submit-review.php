@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include_once 'includes/config.php';
 include_once 'includes/session.php';
 if (!isLoggedIn()) redirect('login.php');

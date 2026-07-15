@@ -200,3 +200,11 @@ a { text-decoration: none; color: #333; }
     .cta-image i { font-size: 4rem; }
     .places-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
 }
+/* Map */
+.detail-map {
+    height: 400px;
+    width: 100%;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    z-index: 1;
+}
