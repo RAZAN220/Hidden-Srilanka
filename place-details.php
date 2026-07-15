@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include_once 'includes/config.php';
 include_once 'includes/session.php';
 include_once 'includes/header.php';
@@ -6,68 +6,70 @@ include_once 'includes/header.php';
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if (!$id) { redirect('explore.php'); }
 
-$stmt = $pdo->prepare("SELECT p.*, c.category_name, u.full_name as contributor,
-                        (SELECT AVG(rating) FROM reviews WHERE place_id = p.id) as avg_rating,
-                        (SELECT COUNT(*) FROM reviews WHERE place_id = p.id) as review_count
-                        FROM places p
-                        JOIN categories c ON p.category_id = c.id
-                        JOIN users u ON p.user_id = u.id
-                        WHERE p.id = ? AND p.status = 'approved'");
+$stmt = $pdo->prepare("SELECT p.*, c.category_name, c.category_icon, u.full_name as contributor, (SELECT AVG(rating) FROM reviews WHERE place_id = p.id) as avg_rating, (SELECT COUNT(*) FROM reviews WHERE place_id = p.id) as review_count FROM places p JOIN categories c ON p.category_id = c.id JOIN users u ON p.user_id = u.id WHERE p.id = ? AND p.status = 'approved'");
 $stmt->execute([$id]);
 $place = $stmt->fetch();
 if (!$place) { redirect('explore.php'); }
 
-// Images
-$imgStmt = $pdo->prepare("SELECT image FROM place_images WHERE place_id = ?");
+$imgStmt = $pdo->prepare('SELECT image FROM place_images WHERE place_id = ?');
 $imgStmt->execute([$id]);
 $images = $imgStmt->fetchAll();
 
-// Reviews
-$revStmt = $pdo->prepare("SELECT r.*, u.full_name, u.profile_image FROM reviews r
-                          JOIN users u ON r.user_id = u.id
-                          WHERE r.place_id = ? ORDER BY r.created_at DESC");
+$revStmt = $pdo->prepare('SELECT r.*, u.full_name, u.profile_image FROM reviews r JOIN users u ON r.user_id = u.id WHERE r.place_id = ? ORDER BY r.created_at DESC');
 $revStmt->execute([$id]);
 $reviews = $revStmt->fetchAll();
 
-// Check if user already reviewed
 $userReview = null;
+$isFavorite = false;
 if (isLoggedIn()) {
-    $check = $pdo->prepare("SELECT * FROM reviews WHERE place_id = ? AND user_id = ?");
+    $check = $pdo->prepare('SELECT * FROM reviews WHERE place_id = ? AND user_id = ?');
     $check->execute([$id, $_SESSION['user_id']]);
     $userReview = $check->fetch();
+
+    $favStmt = $pdo->prepare('SELECT id FROM favorites WHERE place_id = ? AND user_id = ?');
+    $favStmt->execute([$id, $_SESSION['user_id']]);
+    $isFavorite = (bool) $favStmt->fetch();
 }
 ?>
 <div class="container place-detail">
     <div class="detail-header">
         <h1><?= htmlspecialchars($place['title']) ?></h1>
         <div class="detail-meta">
-            <span class="category"><i class="<?= $place['category_icon'] ?? 'fas fa-tag' ?>"></i> <?= $place['category_name'] ?></span>
+            <span class="category"><i class="<?= htmlspecialchars($place['category_icon'] ?? 'fas fa-tag') ?>"></i> <?= htmlspecialchars($place['category_name']) ?></span>
             <span class="location"><i class="fas fa-map-pin"></i> <?= htmlspecialchars($place['district']) ?>, <?= htmlspecialchars($place['province']) ?></span>
             <span class="rating"><i class="fas fa-star"></i> <?= number_format($place['avg_rating'] ?? 0, 1) ?> (<?= $place['review_count'] ?? 0 ?> reviews)</span>
         </div>
+        <?php if (isLoggedIn()): ?>
+            <form action="favorite.php" method="POST" style="margin-top: 15px;">
+                <input type="hidden" name="place_id" value="<?= $place['id'] ?>">
+                <input type="hidden" name="return_to" value="place-details.php?id=<?= $place['id'] ?>">
+                <button type="submit" class="btn <?= $isFavorite ? 'btn-secondary' : 'btn-primary' ?>">
+                    <?= $isFavorite ? 'Remove from Favorites' : 'Add to Favorites' ?>
+                </button>
+            </form>
+        <?php endif; ?>
     </div>
     <div class="detail-gallery">
         <?php if ($images): ?>
             <div class="gallery-grid">
                 <?php foreach ($images as $img): ?>
-                    <img src="<?= BASE_URL ?>uploads/<?= $img['image'] ?>" alt="Place image">
+                    <img src="<?= BASE_URL ?>uploads/<?= htmlspecialchars($img['image']) ?>" alt="Place image">
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <img src="<?= BASE_URL ?>assets/images/placeholder.jpg" alt="No image">
+            <img src="<?= BASE_URL ?>assets/images/placeholder.svg" alt="No image">
         <?php endif; ?>
     </div>
     <div class="detail-info">
         <p><strong>Description:</strong> <?= nl2br(htmlspecialchars($place['description'])) ?></p>
-        <p><strong>Address:</strong> <?= htmlspecialchars($place['address']) ?></p>
-        <p><strong>Entry Fee:</strong> <?= $place['entry_fee'] ? 'LKR '.number_format($place['entry_fee'],2) : 'Free' ?></p>
-        <p><strong>Opening Hours:</strong> <?= htmlspecialchars($place['opening_hours']) ?></p>
-        <p><strong>Contact:</strong> <?= htmlspecialchars($place['contact_number']) ?></p>
+        <p><strong>Address:</strong> <?= htmlspecialchars($place['address'] ?: 'Not specified') ?></p>
+        <p><strong>Entry Fee:</strong> <?= $place['entry_fee'] ? 'LKR ' . number_format($place['entry_fee'], 2) : 'Free' ?></p>
+        <p><strong>Opening Hours:</strong> <?= htmlspecialchars($place['opening_hours'] ?: 'Not specified') ?></p>
+        <p><strong>Contact:</strong> <?= htmlspecialchars($place['contact_number'] ?: 'Not available') ?></p>
         <p><strong>Added by:</strong> <?= htmlspecialchars($place['contributor']) ?></p>
     </div>
-    <div class="detail-map" id="detailMap" data-lat="<?= $place['latitude'] ?>" data-lng="<?= $place['longitude'] ?>"></div>
+    <div class="detail-map" id="detailMap" data-lat="<?= htmlspecialchars($place['latitude']) ?>" data-lng="<?= htmlspecialchars($place['longitude']) ?>"></div>
 
-    <!-- Reviews Section -->
     <div class="reviews-section">
         <h3>Reviews</h3>
         <?php if (isLoggedIn() && !$userReview): ?>
@@ -84,7 +86,7 @@ if (isLoggedIn()) {
                 <button type="submit" class="btn btn-primary">Submit Review</button>
             </form>
         <?php elseif ($userReview): ?>
-            <p>You already reviewed this place.</p>
+            <p>You have already reviewed this place.</p>
         <?php else: ?>
             <p><a href="login.php">Login</a> to leave a review.</p>
         <?php endif; ?>
@@ -92,7 +94,7 @@ if (isLoggedIn()) {
             <?php foreach ($reviews as $rev): ?>
                 <div class="review-item">
                     <div class="review-user">
-                        <img src="<?= BASE_URL ?>uploads/<?= $rev['profile_image'] ?: 'default-avatar.png' ?>" alt="Avatar">
+                        <img src="<?= BASE_URL ?><?= $rev['profile_image'] ? 'uploads/' . htmlspecialchars($rev['profile_image']) : 'assets/images/default-avatar.svg' ?>" alt="Avatar">
                         <span><?= htmlspecialchars($rev['full_name']) ?></span>
                     </div>
                     <div class="review-content">
@@ -109,10 +111,10 @@ if (isLoggedIn()) {
     </div>
 </div>
 <script>
-    // Init map
-    const lat = parseFloat(document.getElementById('detailMap').dataset.lat);
-    const lng = parseFloat(document.getElementById('detailMap').dataset.lng);
-    if (lat && lng) {
+    const mapContainer = document.getElementById('detailMap');
+    const lat = parseFloat(mapContainer.dataset.lat);
+    const lng = parseFloat(mapContainer.dataset.lng);
+    if (!isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0) {
         const map = L.map('detailMap').setView([lat, lng], 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
