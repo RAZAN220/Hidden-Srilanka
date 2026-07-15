@@ -11,12 +11,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ── Back button (auto-injected on every page except home) ──
     var isHome = (location.pathname === '/' || location.pathname === '/index.php');
-    if (!isHome && history.length > 1) {
+    if (!isHome) {
         var btn = document.createElement('button');
         btn.className = 'back-btn';
         btn.innerHTML = '<i class="fas fa-arrow-left"></i> Back';
         btn.setAttribute('aria-label', 'Go back');
-        btn.addEventListener('click', function () { history.back(); });
+        btn.addEventListener('click', function () {
+            var ref = document.referrer;
+            if (ref && ref !== '' && new URL(ref).hostname === location.hostname) {
+                history.back();
+            } else {
+                location.href = '/';
+            }
+        });
         document.body.appendChild(btn);
     }
 
