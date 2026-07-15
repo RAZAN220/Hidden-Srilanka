@@ -120,6 +120,57 @@ if (isLoggedIn()) {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
         L.marker([lat, lng]).addTo(map);
+
+        // ── Current Location Button ──
+        const LocateControl = L.Control.extend({
+            options: { position: 'topleft' },
+            onAdd: function() {
+                const btn = L.DomUtil.create('button', 'map-locate-btn');
+                btn.title = 'Show my location';
+                btn.innerHTML = '<i class="fas fa-location-crosshairs"></i>';
+                let locationMarker = null;
+                let locationCircle  = null;
+                L.DomEvent.on(btn, 'click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    btn.classList.add('locating');
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    if (!navigator.geolocation) {
+                        alert('Geolocation is not supported by your browser.');
+                        btn.classList.remove('locating');
+                        btn.innerHTML = '<i class="fas fa-location-crosshairs"></i>';
+                        return;
+                    }
+                    navigator.geolocation.getCurrentPosition(
+                        function(pos) {
+                            const ulat = pos.coords.latitude;
+                            const ulng = pos.coords.longitude;
+                            const acc  = pos.coords.accuracy;
+                            if (locationMarker) { map.removeLayer(locationMarker); map.removeLayer(locationCircle); }
+                            locationCircle = L.circle([ulat, ulng], { radius: acc, color: '#1e6fad', fillColor: '#3b82c4', fillOpacity: 0.15, weight: 1 }).addTo(map);
+                            locationMarker = L.circleMarker([ulat, ulng], { radius: 8, color: '#fff', weight: 2, fillColor: '#1e6fad', fillOpacity: 1 })
+                                .addTo(map)
+                                .bindPopup('<b><i class="fas fa-person"></i> You are here</b><br><small>Accuracy: ~' + Math.round(acc) + 'm</small>')
+                                .openPopup();
+
+                            // Show both: user location + place marker
+                            const bounds = L.latLngBounds([[ulat, ulng], [lat, lng]]);
+                            map.fitBounds(bounds, { padding: [40, 40] });
+                            btn.classList.remove('locating');
+                            btn.classList.add('located');
+                            btn.innerHTML = '<i class="fas fa-location-crosshairs"></i>';
+                        },
+                        function() {
+                            alert('Unable to get your location. Please allow location access and try again.');
+                            btn.classList.remove('locating');
+                            btn.innerHTML = '<i class="fas fa-location-crosshairs"></i>';
+                        },
+                        { enableHighAccuracy: true, timeout: 10000 }
+                    );
+                });
+                return btn;
+            }
+        });
+        new LocateControl().addTo(map);
     }
 </script>
 <?php include_once 'includes/footer.php'; ?>

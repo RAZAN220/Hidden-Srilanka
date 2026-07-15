@@ -1424,3 +1424,24 @@ a { text-decoration: none; color: #333; }
     .sf-grid { grid-template-columns: 1fr; gap: 28px; }
     .sf-bottom { flex-direction: column; text-align: center; }
 }
+
+/* ── Map locate button ── */
+.map-locate-btn {
+    width: 34px;
+    height: 34px;
+    background: #fff;
+    border: 2px solid rgba(0,0,0,0.25);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    color: #333;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.18);
+    margin-top: 4px;
+}
+.map-locate-btn:hover   { background: #f4f4f4; border-color: #999; }
+.map-locate-btn.locating { color: #1e6fad; border-color: #1e6fad; }
+.map-locate-btn.located  { color: #1e6fad; border-color: #1e6fad; background: #e8f4fd; }

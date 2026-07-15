@@ -89,6 +89,7 @@ $mapPlaces = $pdo->query("SELECT p.id, p.title, p.district, p.province, p.latitu
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
+
     places.forEach(function(p) {
         var lat = parseFloat(p.latitude);
         var lng = parseFloat(p.longitude);
@@ -101,6 +102,54 @@ $mapPlaces = $pdo->query("SELECT p.id, p.title, p.district, p.province, p.latitu
                 );
         }
     });
+
+    // ── Current Location Button ──
+    var LocateControl = L.Control.extend({
+        options: { position: 'topleft' },
+        onAdd: function() {
+            var btn = L.DomUtil.create('button', 'map-locate-btn');
+            btn.title = 'Show my location';
+            btn.innerHTML = '<i class="fas fa-location-crosshairs"></i>';
+            var locationMarker = null;
+            var locationCircle  = null;
+            L.DomEvent.on(btn, 'click', function(e) {
+                L.DomEvent.stopPropagation(e);
+                btn.classList.add('locating');
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                if (!navigator.geolocation) {
+                    alert('Geolocation is not supported by your browser.');
+                    btn.classList.remove('locating');
+                    btn.innerHTML = '<i class="fas fa-location-crosshairs"></i>';
+                    return;
+                }
+                navigator.geolocation.getCurrentPosition(
+                    function(pos) {
+                        var lat = pos.coords.latitude;
+                        var lng = pos.coords.longitude;
+                        var acc = pos.coords.accuracy;
+                        if (locationMarker) { map.removeLayer(locationMarker); map.removeLayer(locationCircle); }
+                        locationCircle = L.circle([lat, lng], { radius: acc, color: '#1e6fad', fillColor: '#3b82c4', fillOpacity: 0.15, weight: 1 }).addTo(map);
+                        locationMarker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#1e6fad', fillOpacity: 1 })
+                            .addTo(map)
+                            .bindPopup('<b><i class="fas fa-person"></i> You are here</b><br><small>Accuracy: ~' + Math.round(acc) + 'm</small>')
+                            .openPopup();
+                        map.setView([lat, lng], 12);
+                        btn.classList.remove('locating');
+                        btn.classList.add('located');
+                        btn.innerHTML = '<i class="fas fa-location-crosshairs"></i>';
+                    },
+                    function() {
+                        alert('Unable to get your location. Please allow location access and try again.');
+                        btn.classList.remove('locating');
+                        btn.innerHTML = '<i class="fas fa-location-crosshairs"></i>';
+                    },
+                    { enableHighAccuracy: true, timeout: 10000 }
+                );
+            });
+            return btn;
+        }
+    });
+    new LocateControl().addTo(map);
 })();
 </script>
 <div class="container section cta-section">
