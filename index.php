@@ -137,4 +137,121 @@ $mapPlaces = $pdo->query("SELECT p.id, p.title, p.district, p.province, p.latitu
         <?php endforeach; ?>
     </div>
 </div>
+<!-- ── About Section ── -->
+<section class="home-about" id="about">
+  <div class="container">
+    <div class="home-about-inner">
+      <div class="home-about-text">
+        <span class="home-section-eyebrow">Who We Are</span>
+        <h2>About <span class="highlight">Hidden Sri Lanka</span></h2>
+        <p class="home-about-lead">Hidden Sri Lanka is a community-powered tourism platform that connects adventurous travellers with authentic local experiences across the island.</p>
+        <p>Our mission is to showcase hidden gems, support local communities, and give travellers a trusted way to discover off-the-beaten-path places. Contributors submit new destinations and our team reviews every submission for quality and accuracy.</p>
+        <div class="home-about-pillars">
+          <div class="home-pillar">
+            <div class="home-pillar-icon"><i class="fas fa-users"></i></div>
+            <div>
+              <strong>Community-Driven</strong>
+              <span>Local contributors share their favourite secret spots.</span>
+            </div>
+          </div>
+          <div class="home-pillar">
+            <div class="home-pillar-icon"><i class="fas fa-shield-alt"></i></div>
+            <div>
+              <strong>Curated Quality</strong>
+              <span>Admin approval keeps every listing reliable.</span>
+            </div>
+          </div>
+          <div class="home-pillar">
+            <div class="home-pillar-icon"><i class="fas fa-star"></i></div>
+            <div>
+              <strong>Discover With Confidence</strong>
+              <span>Browse approved places, reviews, and ratings.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="home-about-visual">
+        <div class="home-about-card hac-1"><i class="fas fa-umbrella-beach"></i><span>Beaches</span></div>
+        <div class="home-about-card hac-2"><i class="fas fa-mountain"></i><span>Mountains</span></div>
+        <div class="home-about-card hac-3"><i class="fas fa-water"></i><span>Waterfalls</span></div>
+        <div class="home-about-card hac-4"><i class="fas fa-tree"></i><span>Forests</span></div>
+        <div class="home-about-globe"><i class="fas fa-map-marked-alt"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Contact Section ── -->
+<section class="home-contact" id="contact">
+  <div class="container">
+    <div class="home-section-header">
+      <span class="home-section-eyebrow">Get In Touch</span>
+      <h2>Contact <span class="highlight">Us</span></h2>
+      <p>Need help or want to share feedback? Reach out and we'll get back to you shortly.</p>
+    </div>
+    <div class="home-contact-grid">
+      <div class="home-contact-info">
+        <div class="home-contact-item">
+          <div class="home-contact-icon"><i class="fas fa-envelope"></i></div>
+          <div>
+            <strong>Email Us</strong>
+            <a href="mailto:support@hiddensrilanka.com">support@hiddensrilanka.com</a>
+          </div>
+        </div>
+        <div class="home-contact-item">
+          <div class="home-contact-icon"><i class="fas fa-phone"></i></div>
+          <div>
+            <strong>Call Us</strong>
+            <a href="tel:+94771234567">+94 77 123 4567</a>
+          </div>
+        </div>
+        <div class="home-contact-item">
+          <div class="home-contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div>
+            <strong>Visit Us</strong>
+            <span>Colombo, Sri Lanka</span>
+          </div>
+        </div>
+        <div class="home-contact-socials">
+          <a href="#" class="home-social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="home-social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="home-social-btn" title="Twitter/X"><i class="fab fa-x-twitter"></i></a>
+          <a href="#" class="home-social-btn" title="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <form class="home-contact-form" onsubmit="handleContactForm(event)">
+        <div class="hcf-row">
+          <div class="hcf-field">
+            <label>Your Name</label>
+            <input type="text" placeholder="John Doe" required>
+          </div>
+          <div class="hcf-field">
+            <label>Email Address</label>
+            <input type="email" placeholder="john@email.com" required>
+          </div>
+        </div>
+        <div class="hcf-field">
+          <label>Subject</label>
+          <input type="text" placeholder="How can we help?">
+        </div>
+        <div class="hcf-field">
+          <label>Message</label>
+          <textarea rows="4" placeholder="Your message…" required></textarea>
+        </div>
+        <button type="submit" class="hcf-submit">Send Message <i class="fas fa-paper-plane"></i></button>
+        <div class="hcf-success" id="hcfSuccess" style="display:none"><i class="fas fa-check-circle"></i> Thanks! We'll be in touch soon.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+function handleContactForm(e) {
+    e.preventDefault();
+    e.target.querySelector('.hcf-submit').disabled = true;
+    document.getElementById('hcfSuccess').style.display = 'flex';
+    setTimeout(function(){ e.target.reset(); e.target.querySelector('.hcf-submit').disabled = false; document.getElementById('hcfSuccess').style.display='none'; }, 4000);
+}
+</script>
+
 <?php include_once 'includes/footer.php'; ?>

@@ -7,8 +7,8 @@
         <ul class="nav-links" id="navLinks">
             <li><a href="<?= BASE_URL ?>">Home</a></li>
             <li><a href="<?= BASE_URL ?>explore.php">Explore</a></li>
-            <li><a href="<?= BASE_URL ?>about.php">About</a></li>
-            <li><a href="<?= BASE_URL ?>contact.php">Contact</a></li>
+            <li><a href="<?= BASE_URL ?>#about">About</a></li>
+            <li><a href="<?= BASE_URL ?>#contact">Contact</a></li>
             <?php if (isLoggedIn()): ?>
                 <li><a href="<?= BASE_URL ?>user/dashboard.php">Dashboard</a></li>
                 <li><a href="<?= BASE_URL ?>logout.php">Logout</a></li>
