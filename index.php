@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include_once 'includes/config.php';
 include_once 'includes/session.php';
 include_once 'includes/header.php';
@@ -6,7 +6,7 @@ include_once 'includes/header.php';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $categories = $pdo->query("SELECT c.*, (SELECT COUNT(*) FROM places p WHERE p.category_id = c.id AND p.status='approved') AS place_count FROM categories c ORDER BY category_name")->fetchAll();
 $featured = $pdo->query("SELECT p.*, c.category_name, c.category_icon, (SELECT image FROM place_images WHERE place_id = p.id LIMIT 1) AS image, (SELECT AVG(rating) FROM reviews WHERE place_id = p.id) AS avg_rating FROM places p JOIN categories c ON p.category_id = c.id WHERE p.status = 'approved' ORDER BY p.created_at DESC LIMIT 6")->fetchAll();
-$gems = $pdo->query("SELECT p.*, c.category_name, c.category_icon, (SELECT image FROM place_images WHERE place_id = p.id LIMIT 1) AS image, (SELECT AVG(rating) FROM reviews WHERE place_id = p.id) AS avg_rating FROM places p JOIN categories c ON p.category_id = c.id WHERE p.status = 'approved' ORDER BY RAND() LIMIT 4")->fetchAll();
+$gems = $pdo->query("SELECT p.*, c.category_name, c.category_icon, (SELECT image FROM place_images WHERE place_id = p.id LIMIT 1) AS image, (SELECT AVG(rating) FROM reviews WHERE place_id = p.id) AS avg_rating FROM places p JOIN categories c ON p.category_id = c.id WHERE p.status = 'approved' ORDER BY RANDOM() LIMIT 4")->fetchAll();
 $totalPlaces = $pdo->query("SELECT COUNT(*) FROM places WHERE status = 'approved'")->fetchColumn();
 $totalUsers = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
 $totalReviews = $pdo->query("SELECT COUNT(*) FROM reviews")->fetchColumn();

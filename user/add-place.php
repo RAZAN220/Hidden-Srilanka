@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $stmt = $pdo->prepare("INSERT INTO places (user_id, category_id, title, description, province, district, address, latitude, longitude, entry_fee, opening_hours, contact_number, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?, 'pending')");
     $stmt->execute([$_SESSION['user_id'], $category_id, $title, $description, $province, $district, $address, $latitude, $longitude, $entry_fee, $opening_hours, $contact_number]);
-    $place_id = $pdo->lastInsertId();
+    $place_id = $pdo->lastInsertId('places_id_seq');
 
     // Handle image uploads
     if (!empty($_FILES['images']['name'][0])) {

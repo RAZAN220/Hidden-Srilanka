@@ -13,7 +13,7 @@ $sql = "SELECT p.*, c.category_name, c.category_icon,
         JOIN categories c ON p.category_id = c.id
         WHERE p.status = 'approved'";
 if ($hidden) {
-    $sql .= " ORDER BY RAND() LIMIT $limit";
+    $sql .= " ORDER BY RANDOM() LIMIT $limit";
 } else {
     $sql .= " ORDER BY p.created_at DESC LIMIT $limit";
 }

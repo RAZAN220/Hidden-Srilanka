@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hash = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare('INSERT INTO users (full_name, email, password, role, created_at) VALUES (?, ?, ?, ?, NOW())');
             $stmt->execute([$full_name, $email, $hash, 'tourist']);
-            $userId = $pdo->lastInsertId();
+            $userId = $pdo->lastInsertId('users_id_seq');
 
             session_regenerate_id(true);
             $_SESSION['user_id'] = $userId;

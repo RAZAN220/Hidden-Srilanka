@@ -1,18 +1,31 @@
 <?php
-// Database configuration
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'hidden_sri_lanka');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// Database configuration — uses Replit's built-in PostgreSQL
+$dsn = "pgsql:host=" . getenv('PGHOST') . ";port=" . getenv('PGPORT') . ";dbname=" . getenv('PGDATABASE');
+$dbUser = getenv('PGUSER');
+$dbPass = getenv('PGPASSWORD');
 
 try {
-    $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);
+    $pdo = new PDO($dsn, $dbUser, $dbPass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
 }
 
-// Site URL (change if needed)
-define('BASE_URL', 'http://localhost/hidden-sri-lanka/');
+// Site base URL — auto-detected so it works on Replit's proxy
+if (!defined('BASE_URL')) {
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    // Detect the script's depth from the project root to build the base path
+    $docRoot = realpath($_SERVER['DOCUMENT_ROOT']);
+    $scriptDir = dirname(realpath($_SERVER['SCRIPT_FILENAME']));
+    $basePath = '/';
+    if ($docRoot && $scriptDir && strpos($scriptDir, $docRoot) === 0) {
+        $rel = str_replace($docRoot, '', $scriptDir);
+        // Walk back to project root (config.php is always in includes/, one level down)
+        $depth = substr_count(trim($rel, '/'), '/');
+        $basePath = '/';
+    }
+    define('BASE_URL', $scheme . '://' . $host . $basePath);
+}
 ?>
