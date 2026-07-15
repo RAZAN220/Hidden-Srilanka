@@ -905,3 +905,241 @@ a { text-decoration: none; color: #333; }
     .auth-form-box { max-width: 100%; }
     .auth-form-header h1 { font-size: 1.6rem; }
 }
+
+/* ══════════════════════════════════════════
+   ADMIN PAGES (places / users / categories)
+══════════════════════════════════════════ */
+
+/* Toolbar */
+.adm-toolbar {
+    margin-bottom: 18px;
+}
+.adm-search-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+}
+.adm-search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 9px 16px;
+    min-width: 260px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.adm-search-wrap i { color: #aaa; font-size: 0.85rem; }
+.adm-search-wrap input {
+    border: none; outline: none;
+    font-size: 0.88rem; color: #1a2e3b;
+    background: transparent; width: 100%;
+}
+.adm-filter-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.adm-tab {
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #666;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.adm-tab span {
+    background: #f0f4f8;
+    color: #555;
+    padding: 1px 7px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+}
+.adm-tab:hover  { border-color: #6c3fc5; color: #6c3fc5; }
+.adm-tab.active { background: #6c3fc5; color: #fff; border-color: #6c3fc5; }
+.adm-tab.active span { background: rgba(255,255,255,0.25); color: #fff; }
+
+/* Alert */
+.adm-alert {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+.adm-alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+.adm-alert-danger  { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* Table wrapper */
+.adm-table-wrap { overflow-x: auto; }
+
+/* Place cell */
+.adm-place-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.adm-place-thumb {
+    width: 52px; height: 40px;
+    border-radius: 6px;
+    background-size: cover;
+    background-position: center;
+    background-color: #f0f4f8;
+    flex-shrink: 0;
+}
+.adm-place-title {
+    font-weight: 600;
+    color: #1a2e3b;
+    font-size: 0.88rem;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+.adm-place-title:hover { color: #6c3fc5; }
+
+/* User cell */
+.adm-user-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.adm-user-thumb {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
+}
+.adm-user-name { font-weight: 600; font-size: 0.88rem; color: #1a2e3b; }
+.adm-you-badge {
+    background: #e8f4fd;
+    color: #1a5276;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-left: 4px;
+}
+.adm-muted { color: #7a8999; font-size: 0.85rem; }
+
+/* Role select */
+.adm-role-form { display: inline; }
+.adm-role-select {
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1.5px solid #e2e8f0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.adm-role-select.role-admin       { background: #fce8e8; color: #c0392b; border-color: #fca5a5; }
+.adm-role-select.role-contributor { background: #e8f4fd; color: #1a5276; border-color: #93c5fd; }
+.adm-role-select.role-tourist     { background: #e8f8ee; color: #1e8449; border-color: #6ee7b7; }
+
+/* Action buttons */
+.adm-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+.adm-btn {
+    width: 32px; height: 32px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    transition: opacity 0.2s, transform 0.15s;
+    text-decoration: none;
+}
+.adm-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.adm-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+.adm-btn-approve { background: #ecfdf5; color: #065f46; }
+.adm-btn-reject  { background: #fef9ec; color: #92400e; }
+.adm-btn-delete  { background: #fef2f2; color: #991b1b; }
+.adm-btn-edit    { background: #eff6ff; color: #1d4ed8; }
+
+/* Categories layout */
+.adm-cat-layout {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 18px;
+    align-items: start;
+}
+.adm-cat-form { padding: 20px; }
+.adm-cat-field { margin-bottom: 16px; }
+.adm-cat-field label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 6px;
+}
+.adm-cat-field input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #f8fafc;
+}
+.adm-cat-field input:focus {
+    border-color: #6c3fc5;
+    box-shadow: 0 0 0 3px rgba(108,63,197,0.1);
+    background: #fff;
+}
+.adm-icon-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.adm-icon-input input { flex: 1; }
+.adm-icon-preview {
+    width: 40px; height: 40px;
+    background: #f0f4f8;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #1e3c2b;
+    flex-shrink: 0;
+}
+.adm-hint { font-size: 0.75rem; color: #aaa; margin-top: 4px; display: block; }
+.adm-hint a { color: #6c3fc5; }
+.adm-cat-form-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+
+.adm-cat-icon-cell {
+    width: 36px; height: 36px;
+    background: #f0f4f8;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    color: #1e3c2b;
+}
+
+/* Responsive admin */
+@media (max-width: 1024px) {
+    .adm-cat-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+    .adm-search-form { flex-direction: column; align-items: stretch; }
+    .adm-search-wrap { min-width: unset; }
+}

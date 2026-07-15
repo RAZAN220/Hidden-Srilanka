@@ -4,7 +4,7 @@ include_once '../includes/session.php';
 if (!isLoggedIn()) redirect('login.php');
 
 $user_id = $_SESSION['user_id'];
-$stmt = $pdo->prepare('SELECT f.id AS fav_id, p.*, c.category_name, c.category_icon, (SELECT image FROM place_images WHERE place_id = p.id LIMIT 1) AS image FROM favorites f JOIN places p ON f.place_id = p.id JOIN categories c ON p.category_id = c.id WHERE f.user_id = ? AND p.status = "approved" ORDER BY f.created_at DESC');
+$stmt = $pdo->prepare('SELECT f.id AS fav_id, p.*, c.category_name, c.category_icon, (SELECT image FROM place_images WHERE place_id = p.id LIMIT 1) AS image FROM favorites f JOIN places p ON f.place_id = p.id JOIN categories c ON p.category_id = c.id WHERE f.user_id = ? AND p.status = \'approved\' ORDER BY f.created_at DESC');
 $stmt->execute([$user_id]);
 $favorites = $stmt->fetchAll();
 
