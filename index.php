@@ -41,42 +41,6 @@ $mapPlaces = $pdo->query("SELECT p.id, p.title, p.district, p.province, p.latitu
 </div>
 <div class="container section">
     <div class="section-header">
-        <h2>Explore by <span class="highlight">Category</span></h2>
-    </div>
-    <div class="categories-grid">
-        <?php foreach ($categories as $category): ?>
-            <a href="explore.php?category=<?= $category['id'] ?>" class="category-card">
-                <div class="category-icon"><i class="<?= htmlspecialchars($category['category_icon'] ?: 'fas fa-map-marker-alt') ?>"></i></div>
-                <h3><?= htmlspecialchars($category['category_name']) ?></h3>
-                <p><?= $category['place_count'] ?> places</p>
-            </a>
-        <?php endforeach; ?>
-    </div>
-</div>
-<div class="container section">
-    <div class="section-header">
-        <h2>Featured <span class="highlight">Places</span></h2>
-    </div>
-    <div class="places-grid">
-        <?php if (empty($featured)): ?>
-            <p>No featured places yet. Check back soon!</p>
-        <?php endif; ?>
-        <?php foreach ($featured as $place): ?>
-            <div class="place-card">
-                <div class="place-image" style="background-image: url('<?= $place['image'] ? BASE_URL . 'uploads/' . htmlspecialchars($place['image']) : BASE_URL . 'assets/images/placeholder.svg' ?>')"></div>
-                <div class="place-info">
-                    <h3><a href="place-details.php?id=<?= $place['id'] ?>"><?= htmlspecialchars($place['title']) ?></a></h3>
-                    <div class="place-meta">
-                        <span class="place-category"><i class="<?= htmlspecialchars($place['category_icon'] ?: 'fas fa-tag') ?>"></i> <?= htmlspecialchars($place['category_name']) ?></span>
-                        <span class="place-rating"><i class="fas fa-star"></i> <?= number_format($place['avg_rating'] ?? 0, 1) ?></span>
-                    </div>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</div>
-<div class="container section">
-    <div class="section-header">
         <h2>Explore the <span class="highlight">Map</span></h2>
         <p>See all approved destinations across Sri Lanka</p>
     </div>
@@ -152,6 +116,42 @@ $mapPlaces = $pdo->query("SELECT p.id, p.title, p.district, p.province, p.latitu
     new LocateControl().addTo(map);
 })();
 </script>
+<div class="container section">
+    <div class="section-header">
+        <h2>Explore by <span class="highlight">Category</span></h2>
+    </div>
+    <div class="categories-grid">
+        <?php foreach ($categories as $category): ?>
+            <a href="explore.php?category=<?= $category['id'] ?>" class="category-card">
+                <div class="category-icon"><i class="<?= htmlspecialchars($category['category_icon'] ?: 'fas fa-map-marker-alt') ?>"></i></div>
+                <h3><?= htmlspecialchars($category['category_name']) ?></h3>
+                <p><?= $category['place_count'] ?> places</p>
+            </a>
+        <?php endforeach; ?>
+    </div>
+</div>
+<div class="container section">
+    <div class="section-header">
+        <h2>Featured <span class="highlight">Places</span></h2>
+    </div>
+    <div class="places-grid">
+        <?php if (empty($featured)): ?>
+            <p>No featured places yet. Check back soon!</p>
+        <?php endif; ?>
+        <?php foreach ($featured as $place): ?>
+            <div class="place-card">
+                <div class="place-image" style="background-image: url('<?= $place['image'] ? BASE_URL . 'uploads/' . htmlspecialchars($place['image']) : BASE_URL . 'assets/images/placeholder.svg' ?>')"></div>
+                <div class="place-info">
+                    <h3><a href="place-details.php?id=<?= $place['id'] ?>"><?= htmlspecialchars($place['title']) ?></a></h3>
+                    <div class="place-meta">
+                        <span class="place-category"><i class="<?= htmlspecialchars($place['category_icon'] ?: 'fas fa-tag') ?>"></i> <?= htmlspecialchars($place['category_name']) ?></span>
+                        <span class="place-rating"><i class="fas fa-star"></i> <?= number_format($place['avg_rating'] ?? 0, 1) ?></span>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
 <div class="container section cta-section">
     <div class="cta-container">
         <div class="cta-content">
