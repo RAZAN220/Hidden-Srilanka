@@ -65,7 +65,7 @@ $districts = $distStmt->fetchAll();
     <div class="places-grid">
         <?php foreach ($places as $place): ?>
             <div class="place-card">
-                <div class="place-image" style="background-image: url('<?= BASE_URL ?>uploads/<?= htmlspecialchars($place['image'] ?: 'assets/images/placeholder.svg') ?>')">
+                <div class="place-image" style="background-image: url('<?= $place['image'] ? BASE_URL . 'uploads/' . htmlspecialchars($place['image']) : BASE_URL . 'assets/images/placeholder.svg' ?>')">
                     <span class="place-status <?= htmlspecialchars($place['status']) ?>"><?= htmlspecialchars($place['status']) ?></span>
                 </div>
                 <div class="place-info">

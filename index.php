@@ -10,6 +10,7 @@ $gems = $pdo->query("SELECT p.*, c.category_name, c.category_icon, (SELECT image
 $totalPlaces = $pdo->query("SELECT COUNT(*) FROM places WHERE status = 'approved'")->fetchColumn();
 $totalUsers = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
 $totalReviews = $pdo->query("SELECT COUNT(*) FROM reviews")->fetchColumn();
+$mapPlaces = $pdo->query("SELECT p.id, p.title, p.district, p.province, p.latitude, p.longitude, c.category_name FROM places p JOIN categories c ON p.category_id = c.id WHERE p.status = 'approved' AND p.latitude IS NOT NULL AND p.longitude IS NOT NULL AND p.latitude != 0 AND p.longitude != 0")->fetchAll();
 ?>
 <div class="hero">
     <div class="hero-overlay"></div>
@@ -74,6 +75,34 @@ $totalReviews = $pdo->query("SELECT COUNT(*) FROM reviews")->fetchColumn();
         <?php endforeach; ?>
     </div>
 </div>
+<div class="container section">
+    <div class="section-header">
+        <h2>Explore the <span class="highlight">Map</span></h2>
+        <p>See all approved destinations across Sri Lanka</p>
+    </div>
+    <div id="homeMap"></div>
+</div>
+<script>
+(function() {
+    var places = <?= json_encode($mapPlaces) ?>;
+    var map = L.map('homeMap').setView([7.8731, 80.7718], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    places.forEach(function(p) {
+        var lat = parseFloat(p.latitude);
+        var lng = parseFloat(p.longitude);
+        if (!isNaN(lat) && !isNaN(lng)) {
+            L.marker([lat, lng])
+                .addTo(map)
+                .bindPopup(
+                    '<strong><a href="place-details.php?id=' + p.id + '">' + p.title + '</a></strong>' +
+                    '<br><small>' + p.category_name + ' &bull; ' + p.district + ', ' + p.province + '</small>'
+                );
+        }
+    });
+})();
+</script>
 <div class="container section cta-section">
     <div class="cta-container">
         <div class="cta-content">
@@ -94,7 +123,7 @@ $totalReviews = $pdo->query("SELECT COUNT(*) FROM reviews")->fetchColumn();
         <?php endif; ?>
         <?php foreach ($gems as $place): ?>
             <div class="place-card">
-                <div class="place-image" style="background-image: url('<?= BASE_URL ?>uploads/<?= htmlspecialchars($place['image'] ?: 'assets/images/placeholder.svg') ?>')">
+                <div class="place-image" style="background-image: url('<?= $place['image'] ? BASE_URL . 'uploads/' . htmlspecialchars($place['image']) : BASE_URL . 'assets/images/placeholder.svg' ?>')">
                     <span class="gem-badge">Hidden Gem</span>
                 </div>
                 <div class="place-info">

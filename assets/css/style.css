@@ -208,3 +208,11 @@ a { text-decoration: none; color: #333; }
     margin: 1.5rem 0;
     z-index: 1;
 }
+
+/* Home page map */
+#homeMap {
+    height: 480px;
+    width: 100%;
+    border-radius: 8px;
+    z-index: 1;
+}

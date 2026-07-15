@@ -1,4 +1,5 @@
 <?php
+include_once 'includes/config.php';
 include_once 'includes/session.php';
 
 if (session_status() !== PHP_SESSION_NONE) {
