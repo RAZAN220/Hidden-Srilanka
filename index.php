@@ -6,7 +6,7 @@ include_once 'includes/header.php';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $categories = $pdo->query("SELECT c.*, (SELECT COUNT(*) FROM places p WHERE p.category_id = c.id AND p.status='approved') AS place_count FROM categories c ORDER BY category_name")->fetchAll();
 $featured = $pdo->query("SELECT p.*, c.category_name, c.category_icon, (SELECT image FROM place_images WHERE place_id = p.id LIMIT 1) AS image, (SELECT AVG(rating) FROM reviews WHERE place_id = p.id) AS avg_rating FROM places p JOIN categories c ON p.category_id = c.id WHERE p.status = 'approved' ORDER BY p.created_at DESC LIMIT 6")->fetchAll();
-$gems = $pdo->query("SELECT p.*, c.category_name, c.category_icon, (SELECT image FROM place_images WHERE place_id = p.id LIMIT 1) AS image, (SELECT AVG(rating) FROM reviews WHERE place_id = p.id) AS avg_rating FROM places p JOIN categories c ON p.category_id = c.id WHERE p.status = 'approved' ORDER BY RANDOM() LIMIT 4")->fetchAll();
+$gems = $pdo->query("SELECT p.*, c.category_name, c.category_icon, (SELECT image FROM place_images WHERE place_id = p.id LIMIT 1) AS image, (SELECT AVG(rating) FROM reviews WHERE place_id = p.id) AS avg_rating FROM places p JOIN categories c ON p.category_id = c.id WHERE p.status = 'approved' ORDER BY RAND() LIMIT 4")->fetchAll();
 $totalPlaces = $pdo->query("SELECT COUNT(*) FROM places WHERE status = 'approved'")->fetchColumn();
 $totalUsers = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
 $totalReviews = $pdo->query("SELECT COUNT(*) FROM reviews")->fetchColumn();
@@ -14,32 +14,50 @@ $mapPlaces = $pdo->query("SELECT p.id, p.title, p.district, p.province, p.latitu
 ?>
 <div class="hero">
     <div class="hero-overlay"></div>
+
+    <!-- Decorative floating shapes -->
+    <div class="hero-shapes">
+        <div class="hero-shape hero-shape-1"><i class="fas fa-leaf"></i></div>
+        <div class="hero-shape hero-shape-2"><i class="fas fa-mountain"></i></div>
+        <div class="hero-shape hero-shape-3"><i class="fas fa-water"></i></div>
+        <div class="hero-shape hero-shape-4"><i class="fas fa-sun"></i></div>
+    </div>
+
     <div class="hero-content">
-        <h1>Discover Sri Lanka's Hidden Gems</h1>
+        <h1>Discover Sri Lanka's <span class="highlight">Hidden Gems</span></h1>
         <p>Explore authentic local experiences, secret spots, and off-the-beaten-path destinations curated by the community.</p>
         <form action="explore.php" method="GET" class="search-form">
             <div class="search-input-group">
                 <input type="text" name="search" placeholder="Search by title, district, or keywords" value="<?= htmlspecialchars($search) ?>">
-                <button type="submit">Search</button>
+                <button type="submit"><i class="fas fa-search"></i> Search</button>
             </div>
         </form>
         <div class="hero-stats">
-            <div>
+            <div class="stat-item">
                 <span class="stat-number"><?= $totalPlaces ?></span>
                 <span class="stat-label">Approved Places</span>
             </div>
-            <div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
                 <span class="stat-number"><?= $totalUsers ?></span>
                 <span class="stat-label">Community Members</span>
             </div>
-            <div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
                 <span class="stat-number"><?= $totalReviews ?></span>
                 <span class="stat-label">Reviews</span>
             </div>
         </div>
     </div>
+
+    <!-- Scroll down indicator -->
+    <div class="scroll-down">
+        <a href="#explore">
+            <i class="fas fa-chevron-down"></i>
+        </a>
+    </div>
 </div>
-<div class="container section">
+<div class="container section" id="explore">
     <div class="section-header">
         <h2>Explore the <span class="highlight">Map</span></h2>
         <p>See all approved destinations across Sri Lanka</p>
